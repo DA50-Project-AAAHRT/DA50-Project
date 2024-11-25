@@ -34,13 +34,14 @@ public class Main extends Application{
             e.printStackTrace();
         }
 
-    //Lire les utilisateurs depuis la base de données
+        //Lire les utilisateurs depuis la base de données
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.createQuery("from User", User.class)
-                .getResultList()
-                .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail() + " - " + u.getPassword() + " - " + u.getRole()));
+                    .getResultList()
+                    .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail() + " - " + u.getPassword() + " - " + u.getRole()));
             System.out.println("second try " + user.toString());
         }
         launch(args);
+        //HibernateUtil.shutdown();
     }
 }
