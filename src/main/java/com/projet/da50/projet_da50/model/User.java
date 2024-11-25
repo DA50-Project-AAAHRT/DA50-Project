@@ -20,7 +20,7 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)  // Added annotation for enum mapping to the database
+    //@Enumerated(EnumType.STRING)  // Added annotation for enum mapping to the database
     @Column(name = "role", nullable = false)
     private Role role;
 

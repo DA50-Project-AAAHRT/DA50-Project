@@ -21,7 +21,7 @@ public class Main extends Application{
         user.setUsername("Jane Doe");
         user.setEmail("jane.doe@example.com");
         user.setPassword("password");
-        user.setRole(Role.Reader);
+        user.setRole(Role.Admin);
 
         // Sauvegarder l'utilisateur dans la base de données
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -38,9 +38,8 @@ public class Main extends Application{
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.createQuery("from User", User.class)
                 .getResultList()
-                .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail()));
+                .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail() + " - " + u.getPassword() + " - " + u.getRole()));
             System.out.println("second try " + user.toString());
-
         }
         launch(args);
     }
