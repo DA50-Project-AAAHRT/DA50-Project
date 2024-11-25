@@ -1,8 +1,11 @@
 package com.projet.da50.projet_da50;
 
+import com.projet.da50.projet_da50.model.User;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import com.projet.da50.projet_da50.view.AuthentificationFormView;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 public class Main extends Application{
     @Override
@@ -12,6 +15,27 @@ public class Main extends Application{
     }
 
     public static void main(String[] args) {
+
+        User user = new User();
+        user.setUsername("Jane Doe");
+        user.setEmail("jane.doe@example.com");
+
+        // Sauvegarder l'utilisateur dans la base de données
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+            session.save(user);
+            transaction.commit();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    //Lire les utilisateurs depuis la base de données
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+        session.createQuery("from User", User.class)
+                .getResultList()
+                .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail()));
+    }
         launch(args);
     }
 }
