@@ -1,5 +1,6 @@
 package com.projet.da50.projet_da50;
 
+import com.projet.da50.projet_da50.model.Role;
 import com.projet.da50.projet_da50.model.User;
 import javafx.stage.Stage;
 import javafx.application.Application;
@@ -19,12 +20,15 @@ public class Main extends Application{
         User user = new User();
         user.setUsername("Jane Doe");
         user.setEmail("jane.doe@example.com");
+        user.setPassword("password");
+        user.setRole(Role.Reader);
 
         // Sauvegarder l'utilisateur dans la base de données
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
+            System.out.println("first try" +user.toString());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -32,10 +36,12 @@ public class Main extends Application{
 
     //Lire les utilisateurs depuis la base de données
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-        session.createQuery("from User", User.class)
+            session.createQuery("from User", User.class)
                 .getResultList()
                 .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail()));
-    }
+            System.out.println("second try " + user.toString());
+
+        }
         launch(args);
     }
 }
