@@ -55,11 +55,8 @@ public class CreateAccountFormView extends UI {
             String password = pwBox.getText();
             String email = emailTextField.getText();
 
-            String result = userController.createUser(username, password, email);
-            System.out.println(result);  // Affiche le message de retour (ex. "Utilisateur créé avec succès !" ou erreur)
-            if (result.equals("Utilisateur créé avec succès !")) {
-                new AuthentificationFormView(primaryStage).show();
-            }
+            userController.createUser(username, password, email);
+            new AuthentificationFormView(primaryStage).show();
         });
 
         Button btnBack = new Button("Retour");

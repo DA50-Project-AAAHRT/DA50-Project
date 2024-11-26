@@ -1,7 +1,9 @@
 package com.projet.da50.projet_da50.controller;
 
+import com.projet.da50.projet_da50.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 
@@ -32,22 +34,38 @@ public class UserController {
         }
     }
 
-    // Créer un nouvel utilisateur
-    public String createUser(String username, String password, String email) {
-        if (userExists(username)) {
-            return "L'utilisateur " + username + " existe déjà.";
+    //TODO : Return something for email and username when already exists for the view.
+    // Create a new user
+    public void createUser(String username, String password, String email) {
+        User user = new User(username, password, email);
+
+        // Save the user to the database
+        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction transaction = session.beginTransaction();
+
+            // Check if user already exists (by email and username)
+            User existingUser = session.createQuery("from User where username = :username or email = :email", User.class)
+                    .setParameter("username", user.getUsername())
+                    .setParameter("email", user.getEmail())
+                    .uniqueResult();
+            if(existingUser != null) {
+                System.out.println("User already exists");
+            }else {
+                session.save(user);
+                transaction.commit();
+                System.out.println("first try" +user.toString());
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
 
-        // Créer une session Hibernate pour ajouter un utilisateur
-        Session session = factory.getCurrentSession();
-        try {
-            session.beginTransaction();
-            User newUser = new User(username, password, email);
-            session.save(newUser);  // Sauvegarder l'utilisateur dans la base de données
-            session.getTransaction().commit(); // Valider la transaction
-            return "Utilisateur créé avec succès !";
-        } finally {
-            session.close();
+        //Read the users from the database (not necessary only for debbuging)
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.createQuery("from User", User.class)
+                    .getResultList()
+                    .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail() + " - " + u.getPassword() + " - " + u.getRole()));
+            System.out.println("second try " + user.toString());
         }
     }
 

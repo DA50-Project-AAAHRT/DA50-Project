@@ -11,13 +11,15 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    //Must be unique
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "email", nullable = false)
+    //Must be unique
+    @Column(name = "email", unique= true, nullable = false)
     private String email;
 
     //@Enumerated(EnumType.STRING)  // Added annotation for enum mapping to the database
@@ -32,7 +34,7 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = Role.Reader; // Par défaut, un nouvel utilisateur est un lecteur
+        this.role = Role.Reader; // Default role
     }
 
     // Getters et setters
