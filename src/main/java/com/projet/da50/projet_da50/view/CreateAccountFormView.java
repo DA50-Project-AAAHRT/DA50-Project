@@ -13,6 +13,8 @@ import javafx.stage.Stage;
 
 import com.projet.da50.projet_da50.controller.UserController;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class CreateAccountFormView extends UI {
 
     private UserController userController;
@@ -50,16 +52,30 @@ public class CreateAccountFormView extends UI {
         grid.add(pwBox, 1, 2);
 
         Button btnCreateAccount = new Button("Créer un compte");
+
+        AtomicBoolean userexist = new AtomicBoolean(false);
         btnCreateAccount.setOnAction(e -> {
             String username = userTextField.getText();
             String password = pwBox.getText();
             String email = emailTextField.getText();
 
-            userController.createUser(username, password, email);
-            new AuthentificationFormView(primaryStage).show();
+            userexist.set(userController.checkUserExists(username, password, email));
+            if(userexist.get()) {
+                System.out.println("User created");
+                userController.createUser(username, password, email);
+                new AuthentificationFormView(primaryStage).show();
+            }
+            System.out.println(userexist.get());
+            if(!userexist.get()) {
+                Label userexistLabel = new Label("User already exists");
+                grid.add(userexistLabel, 3, 3);
+                System.out.println("User already exists");
+            }
         });
+        System.out.println(userexist.get());
 
-        Button btnBack = new Button("Retour");
+
+        Button btnBack = new Button("Login");
         btnBack.setOnAction(e -> new AuthentificationFormView(primaryStage).show());
 
         HBox hbButtons = new HBox(10);

@@ -1,4 +1,4 @@
-- Mettre message dans le view quand utilisateur existe déjà
+- Connexion remettre les champs par défaut (vide) après utilisateurs existe déjà
 
 - User connexion --> Emmene vers une page ou sera deco
 
@@ -10,7 +10,7 @@
 
 - Crypter mdp
 
-- Déconnexion // supp le token
+- Déconnexion --> supp le token
 
 - pas sur mais automatisé l'implémentaion de la base de donnée
 
