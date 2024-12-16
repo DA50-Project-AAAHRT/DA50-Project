@@ -1,0 +1,20 @@
+- Mettre message dans le view quand utilisateur existe déjà
+
+- User connexion --> Emmene vers une page ou sera deco
+
+- Admin comment faire pour le role
+
+- Token quand connexion (1 jours)
+
+- Gerer les logs
+
+- Crypter mdp
+
+- Déconnexion // supp le token
+
+- pas sur mais automatisé l'implémentaion de la base de donnée
+
+- Ameliorer le view en general
+
+- Command line argumenent in order to instantiate the database with the right schema from the db.json that will
+    contain the schema of the database and the data that will be inserted in the database
