@@ -1,6 +1,5 @@
 - Connexion remettre les champs par défaut (vide) après utilisateurs existe déjà
 
-
 - User connexion --> Emmene vers une page ou sera deco
 
 - Admin comment faire pour le role
@@ -19,3 +18,6 @@
 
 - Command line argumenent in order to instantiate the database with the right schema from the db.json that will
     contain the schema of the database and the data that will be inserted in the database
+
+- Manage the errors : function that take argument (email,pwd,..) explaining the error
+    verify the email is an email, verify the password with restriction (6 characters...)
