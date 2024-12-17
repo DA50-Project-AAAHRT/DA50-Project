@@ -9,7 +9,7 @@
 
 - Gerer les logs
 
-- Crypter mdp
+- Crypter mdp -- FAIT
 
 - Déconnexion --> supp le token
 

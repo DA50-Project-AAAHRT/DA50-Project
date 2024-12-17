@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.projet.da50.projet_da50.model.User;
 
@@ -27,6 +28,7 @@ public class UserController {
             Transaction transaction = session.beginTransaction();
 
             // Check if user already exists (by email and username)
+            // TODO : Use the function checkUser instead of the following code
             User existingUser = session.createQuery("from User where username = :username or email = :email", User.class)
                     .setParameter("username", user.getUsername())
                     .setParameter("email", user.getEmail())
@@ -60,24 +62,26 @@ public class UserController {
         }
     }
 
-    // Vérifier si un utilisateur existe avec le bon mot de passe
+    // Check if a user exists with the right password
     public boolean verifyUser(String username, String password) {
         Session session = factory.getCurrentSession();
         try {
             session.beginTransaction();
-            String hql = "FROM User WHERE username = :username AND password = :password";
+            String hql = "FROM User WHERE username = :username";
             Query<User> query = session.createQuery(hql);
             query.setParameter("username", username);
-            query.setParameter("password", password);
             User result = query.uniqueResult();
             session.getTransaction().commit();
-            return result != null;  // Si l'utilisateur existe et que le mot de passe est correct
+            if (result != null && BCrypt.checkpw(password, result.getPassword())) {
+                return true;  // If the user exists and the password is correct
+            }
+            return false;
         } finally {
             session.close();
         }
     }
 
-    // Fermer la sessionFactory quand elle n'est plus nécessaire
+    // Close the SessionFactory when the application is closed
     public void close() {
         factory.close();
     }

@@ -22,6 +22,7 @@ public class AuthentificationFormView extends UI{
         this.primaryStage = primaryStage;
         this.userController = new UserController();
     }
+
     public void show() {
         primaryStage.setTitle("Authentification");
 
