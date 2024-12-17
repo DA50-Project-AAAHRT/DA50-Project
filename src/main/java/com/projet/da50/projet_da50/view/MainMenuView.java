@@ -41,7 +41,7 @@ public class MainMenuView extends UI {
         Button btnDisconnect = new Button("Disconnect");
         btnDisconnect.setOnAction(e -> {
             // Redirect to AuthentificationFormView
-            new AuthentificationFormView(primaryStage).show();
+            new AuthenticationFormView(primaryStage).show();
         });
         grid.add(btnDisconnect, 0, 2);
 

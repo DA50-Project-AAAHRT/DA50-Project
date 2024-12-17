@@ -20,31 +20,37 @@ public class UserController {
     }
 
     // Verify if a user exists
-    public boolean checkUserExists(String username, String password, String email) {
-        User user = new User(username, password, email);
+    public boolean checkUserExists(String username, String email) {
+        User user = new User(username, "", email);
 
-        // Save the user to the database
+        // Check if the user already exists
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
 
-            // Check if user already exists (by email and username)
-            // TODO : Use the function checkUser instead of the following code
-            User existingUser = session.createQuery("from User where username = :username or email = :email", User.class)
-                    .setParameter("username", user.getUsername())
-                    .setParameter("email", user.getEmail())
-                    .uniqueResult();
-            if (existingUser == null) {
+            // Check if user already exists by username
+            Query<User> queryByUsername = session.createQuery("from User where username = :username", User.class);
+            queryByUsername.setParameter("username", user.getUsername());
+            User existingUserByUsername = queryByUsername.uniqueResult();
+            if (existingUserByUsername != null) {
                 return true;
             }
+
+            // Check if user already exists by email
+            Query<User> queryByEmail = session.createQuery("from User where email = :email", User.class);
+            queryByEmail.setParameter("email", user.getEmail());
+            User existingUserByEmail = queryByEmail.uniqueResult();
+            if (existingUserByEmail != null) {
+                return true;
+            }
+
             return false;
         }
         catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
-    //TODO : Return something for email and username when already exists for the view.
     // Create a new user
     public void createUser(String username, String password, String email) {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -56,7 +62,6 @@ public class UserController {
 
             session.save(user);
             transaction.commit();
-            System.out.println("first try" +user.toString());
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +69,7 @@ public class UserController {
     }
 
     // Check if a user exists with the right password
-    public boolean verifyUser(String username, String password) {
+    public boolean verifyUserCredentials(String username, String password) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             String hql = "FROM User WHERE username = :username";

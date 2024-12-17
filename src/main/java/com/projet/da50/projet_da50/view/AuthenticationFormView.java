@@ -1,5 +1,6 @@
 package com.projet.da50.projet_da50.view;
 
+import com.projet.da50.projet_da50.controller.LoginErrorHandler;
 import com.projet.da50.projet_da50.controller.UserController;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -12,17 +13,20 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
-public class AuthentificationFormView extends UI{
+public class AuthenticationFormView extends UI{
 
     private UserController userController;
     private Stage primaryStage;
+    private LoginErrorHandler loginErrorHandler;
 
-    public AuthentificationFormView(Stage primaryStage) {
+    public AuthenticationFormView(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.userController = new UserController();
+        this.loginErrorHandler = new LoginErrorHandler();
     }
 
     public void show() {
+
         primaryStage.setTitle("Authentification");
 
         GridPane grid = new GridPane();
@@ -55,15 +59,14 @@ public class AuthentificationFormView extends UI{
             String username = userField.getText();
             String password = pwField.getText();
 
-            if (userController.verifyUser(username, password)) {
-                System.out.println("Connexion réussie !");
-                // Redirect user to the main menu
+            String validationMessage = loginErrorHandler.validateAuthenticationFields(username, password);
+            if ("Valid credentials.".equals(validationMessage)) {
                 new MainMenuView(primaryStage).show();
             } else {
-                // TODO : call the error explanation function with "bad credentials error"
+                Label errorLabel = new Label(validationMessage);
+                grid.add(errorLabel, 1, 3);
                 userField.clear();
                 pwField.clear();
-                System.out.println("Identifiants incorrects.");
             }
         });
 

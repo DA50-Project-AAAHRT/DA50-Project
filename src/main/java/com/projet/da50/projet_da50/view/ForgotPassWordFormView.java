@@ -1,5 +1,6 @@
 package com.projet.da50.projet_da50.view;
 
+import com.projet.da50.projet_da50.controller.LoginErrorHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,9 +14,11 @@ import javafx.stage.Stage;
 public class ForgotPassWordFormView extends UI {
 
     private Stage primaryStage;
+    private LoginErrorHandler loginErrorHandler;
 
     public ForgotPassWordFormView(Stage primaryStage) {
         this.primaryStage = primaryStage;
+        this.loginErrorHandler = new LoginErrorHandler();
     }
 
     public void show() {
@@ -30,22 +33,25 @@ public class ForgotPassWordFormView extends UI {
 
         Label emailLabel = new Label("Email:");
         grid.add(emailLabel, 0, 0);
-        TextField emailTextField = new TextField();
-        grid.add(emailTextField, 1, 0);
+        TextField emailField = new TextField();
+        grid.add(emailField, 1, 0);
 
         Button btnResetPassword = new Button("Réinitialiser le mot de passe");
         btnResetPassword.setOnAction(e -> {
-            String email = emailTextField.getText();
-            if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            String email = emailField.getText();
+            String validationMessage = loginErrorHandler.validateForgotPasswordFields(email);
+            if ("Valid credentials.".equals(validationMessage)) {
                 System.out.println("Lien de réinitialisation envoyé à " + email);
-                new AuthentificationFormView(primaryStage).show();
+                new AuthenticationFormView(primaryStage).show();
             } else {
-                System.out.println("Adresse email invalide");
+                Label errorLabel = new Label(validationMessage);
+                grid.add(errorLabel, 1, 3);
+                emailField.clear();
             }
         });
 
         Button btnBack = new Button("Retour");
-        btnBack.setOnAction(e -> new AuthentificationFormView(primaryStage).show());
+        btnBack.setOnAction(e -> new AuthenticationFormView(primaryStage).show());
 
         HBox hbButtons = new HBox(10);
         hbButtons.setAlignment(Pos.BOTTOM_RIGHT);

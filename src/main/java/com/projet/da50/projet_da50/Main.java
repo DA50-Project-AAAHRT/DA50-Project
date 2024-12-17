@@ -1,17 +1,13 @@
 package com.projet.da50.projet_da50;
 
-import com.projet.da50.projet_da50.model.Role;
-import com.projet.da50.projet_da50.model.User;
 import javafx.stage.Stage;
 import javafx.application.Application;
-import com.projet.da50.projet_da50.view.AuthentificationFormView;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import com.projet.da50.projet_da50.view.AuthenticationFormView;
 
 public class Main extends Application{
     @Override
     public void start(Stage primaryStage) {
-        AuthentificationFormView authPage = new AuthentificationFormView(primaryStage);
+        AuthenticationFormView authPage = new AuthenticationFormView(primaryStage);
         authPage.show();
     }
 

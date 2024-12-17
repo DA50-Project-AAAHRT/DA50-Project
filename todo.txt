@@ -15,14 +15,13 @@
 
 - Déconnexion --> supp le token
 
+- Command line argument in order to instantiate the database with the right schema from the db.json that will
+    contain the schema of the database and the data that will be inserted in the database
 - pas sur mais automatisé l'implémentaion de la base de donnée
 
 - Ameliorer le view en general
 
-- Command line argumenent in order to instantiate the database with the right schema from the db.json that will
-    contain the schema of the database and the data that will be inserted in the database
-
 - Manage the errors : function that take argument (email,pwd,..) explaining the error
-    verify the email is an email, verify the password with restriction (6 characters...)
+    verify the email is an email, verify the password with restriction (6 characters...) -- FAIT mais améliorer le view et ajouter des erreurs si nécessaire
 
 - Create unitary test
