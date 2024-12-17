@@ -47,7 +47,8 @@ public class UserController {
     //TODO : Return something for email and username when already exists for the view.
     // Create a new user
     public void createUser(String username, String password, String email) {
-        User user = new User(username, password, email);
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        User user = new User(username, hashedPassword, email);
 
         // Save the user to the database
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {

@@ -1,4 +1,4 @@
-module com.projet.da50.projet_da50 {
+module com.projet.da.projet_da {
 
     requires javafx.controls;           // JavaFX Controls
     requires javafx.fxml;              // JavaFX FXML

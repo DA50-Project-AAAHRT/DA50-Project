@@ -1,6 +1,6 @@
-- Connexion remettre les champs par défaut (vide) après utilisateurs existe déjà
+- Connexion remettre les champs par défaut (vide) après utilisateurs existe déjà -- FAIT
 
-- User connexion --> Emmene vers une page ou sera deco
+- User connexion --> Emmene vers une page ou sera deco -- FAIT
 
 - Admin comment faire pour le role
 
