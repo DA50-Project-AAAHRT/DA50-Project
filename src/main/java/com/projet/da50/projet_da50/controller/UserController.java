@@ -44,31 +44,20 @@ public class UserController {
 
     //TODO : Return something for email and username when already exists for the view.
     // Create a new user
-    public boolean createUser(String username, String password, String email) {
+    public void createUser(String username, String password, String email) {
         User user = new User(username, password, email);
 
         // Save the user to the database
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
 
-            // Check if user already exists (by email and username)
-            User existingUser = session.createQuery("from User where username = :username or email = :email", User.class)
-                    .setParameter("username", user.getUsername())
-                    .setParameter("email", user.getEmail())
-                    .uniqueResult();
-            if(existingUser != null) {
-                return false;
-            }else {
-                session.save(user);
-                transaction.commit();
-                System.out.println("first try" +user.toString());
-                return true;
-            }
+            session.save(user);
+            transaction.commit();
+            System.out.println("first try" +user.toString());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     // Vérifier si un utilisateur existe avec le bon mot de passe
