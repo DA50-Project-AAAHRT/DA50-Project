@@ -3,6 +3,9 @@
 - User connexion --> Emmene vers une page ou sera deco -- FAIT
 
 - Admin comment faire pour le role
+    No token for the admin (in security purpose)
+
+- Admin will have different view
 
 - Token quand connexion (1 jours)
 
@@ -21,3 +24,5 @@
 
 - Manage the errors : function that take argument (email,pwd,..) explaining the error
     verify the email is an email, verify the password with restriction (6 characters...)
+
+- Create unitary test
