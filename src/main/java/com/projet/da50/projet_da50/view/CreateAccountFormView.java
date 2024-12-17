@@ -65,15 +65,18 @@ public class CreateAccountFormView extends UI {
                 userController.createUser(username, password, email);
                 new AuthentificationFormView(primaryStage).show();
             }
-            System.out.println(userexist.get());
-            if(!userexist.get()) {
+            else {
+                // TODO : call the error explanation function to display a message in the view
                 Label userexistLabel = new Label("User already exists");
                 grid.add(userexistLabel, 3, 3);
+
                 System.out.println("User already exists");
+
+                userTextField.clear();
+                emailTextField.clear();
+                pwBox.clear();
             }
         });
-        System.out.println(userexist.get());
-
 
         Button btnBack = new Button("Login");
         btnBack.setOnAction(e -> new AuthentificationFormView(primaryStage).show());

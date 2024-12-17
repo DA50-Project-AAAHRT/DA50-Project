@@ -1,7 +1,6 @@
 package com.projet.da50.projet_da50.view;
 
 import com.projet.da50.projet_da50.controller.UserController;
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
@@ -32,59 +31,62 @@ public class AuthentificationFormView extends UI{
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        // Ajout du label et champ pour le nom d'utilisateur
+        // Add the label and username field
         Label userLabel = new Label("Nom d'utilisateur:");
         grid.add(userLabel, 0, 0);
 
-        TextField userTextField = new TextField();
-        grid.add(userTextField, 1, 0);
+        TextField userField = new TextField();
+        grid.add(userField, 1, 0);
 
-        // Ajout du label et champ pour le mot de passe
+        // Add the label and password field
         Label pwLabel = new Label("Mot de passe:");
         grid.add(pwLabel, 0, 1);
 
-        PasswordField pwBox = new PasswordField();
-        grid.add(pwBox, 1, 1);
+        PasswordField pwField = new PasswordField();
+        grid.add(pwField, 1, 1);
 
-        // Bouton de connexion
+        // Connexion button
         Button btnLogin = new Button("Connexion");
         HBox hbBtnLogin = new HBox(10);
         hbBtnLogin.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtnLogin.getChildren().add(btnLogin);
         grid.add(hbBtnLogin, 1, 2);
         btnLogin.setOnAction(e -> {
-            /*String username = userTextField.getText();
-            String password = pwBox.getText();
+            String username = userField.getText();
+            String password = pwField.getText();
 
             if (userController.verifyUser(username, password)) {
                 System.out.println("Connexion réussie !");
-                // Rediriger l'utilisateur vers la page d'accueil ou le tableau de bord
+                // Redirect user to the main menu
+                new MainMenuView(primaryStage).show();
             } else {
+                // TODO : call the error explanation function with "bad credentials error"
+                userField.clear();
+                pwField.clear();
                 System.out.println("Identifiants incorrects.");
-            }*/
-            new MainMenuView(primaryStage).show();
+            }
         });
 
-        // Bouton "Mot de passe oublié"
+        // Button "Mot de passe oublié"
         Button btnForgotPassword = new Button("Mot de passe oublié");
         btnForgotPassword.setOnAction(e -> {
             ForgotPassWordFormView forgotPasswordPage = new ForgotPassWordFormView(primaryStage);
             forgotPasswordPage.show();
         });
 
-        // Bouton "Créer un compte"
+        // Button "Créer un compte"
         Button btnCreateAccount = new Button("Créer un compte");
         btnCreateAccount.setOnAction(e -> {
             CreateAccountFormView createAccountPage = new CreateAccountFormView(primaryStage);
             createAccountPage.show();
         });
-        // Ajout des boutons secondaires
+        // Add the buttons to the bottom of the grid
         HBox hbBottomButtons = new HBox(10);
         hbBottomButtons.setAlignment(Pos.BOTTOM_CENTER);
         hbBottomButtons.getChildren().addAll(btnForgotPassword, btnCreateAccount);
         grid.add(hbBottomButtons, 1, 3);
 
-        // Création et affichage de la scène
+        // Create the scene and add the grid pane
         Scene scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
         primaryStage.setTitle("Page d'authentification");
         primaryStage.setScene(scene);

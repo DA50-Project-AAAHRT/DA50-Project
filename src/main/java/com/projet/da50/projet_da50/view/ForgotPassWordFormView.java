@@ -35,8 +35,13 @@ public class ForgotPassWordFormView extends UI {
 
         Button btnResetPassword = new Button("Réinitialiser le mot de passe");
         btnResetPassword.setOnAction(e -> {
-            System.out.println("Lien de réinitialisation envoyé à " + emailTextField.getText());
-            new AuthentificationFormView(primaryStage).show();
+            String email = emailTextField.getText();
+            if (email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                System.out.println("Lien de réinitialisation envoyé à " + email);
+                new AuthentificationFormView(primaryStage).show();
+            } else {
+                System.out.println("Adresse email invalide");
+            }
         });
 
         Button btnBack = new Button("Retour");

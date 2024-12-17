@@ -15,11 +15,11 @@ public class UserController {
     private SessionFactory factory;
 
     public UserController() {
-        // Créer la SessionFactory à partir de la configuration
+        // Create the SessionFactory when the application is started
         factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
     }
 
-    // Vérifier si un utilisateur existe
+    // Verify if a user exists
     public boolean checkUserExists(String username, String password, String email) {
         User user = new User(username, password, email);
 
@@ -64,8 +64,7 @@ public class UserController {
 
     // Check if a user exists with the right password
     public boolean verifyUser(String username, String password) {
-        Session session = factory.getCurrentSession();
-        try {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             session.beginTransaction();
             String hql = "FROM User WHERE username = :username";
             Query<User> query = session.createQuery(hql);
@@ -76,8 +75,9 @@ public class UserController {
                 return true;  // If the user exists and the password is correct
             }
             return false;
-        } finally {
-            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
