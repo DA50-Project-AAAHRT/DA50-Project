@@ -42,7 +42,7 @@ public class UserControllerTest {
 
     @Test
     void testCreateUserTest(){
-        User userTest = new User("a", "a", "a");
+        User userTest = new User("b", "a", "a");
         assertEquals(user.getUsername(), userTest.getUsername());
         assertEquals(user.getEmail(), userTest.getEmail());
         assertEquals("a", userTest.getPassword());
