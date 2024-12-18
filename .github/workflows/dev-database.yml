@@ -16,7 +16,16 @@ jobs:
 
       # Start Docker container
       - name: Start MySQL
-        run: docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=da50 -p 3306:3306 mysql:8.4.3
+        run: docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=da50 -p 3306:3306 mysql:8.0.33
+
+      - name: Wait for MySQL to be ready
+        run: |
+          for i in {1..30}; do
+            docker exec mysql mysqladmin ping -h localhost --silent && break
+            echo "Waiting for MySQL to initialize..."
+            sleep 2
+          done
+
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
