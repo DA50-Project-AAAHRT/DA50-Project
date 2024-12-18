@@ -27,6 +27,14 @@ public class UserController {
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();
 
+            // Check if user already exists by mail
+            Query<User> queryByEmail = session.createQuery("from User where email = :mail", User.class);
+            queryByEmail.setParameter("mail", user.getEmail());
+            User existingUserByEmail = queryByEmail.uniqueResult();
+            if (existingUserByEmail != null) {
+                return "This mail is already used.";
+            }
+
             // Check if user already exists by username
             Query<User> queryByUsername = session.createQuery("from User where username = :username", User.class);
             queryByUsername.setParameter("username", user.getUsername());
@@ -35,13 +43,6 @@ public class UserController {
                 return "This username is already taken.";
             }
 
-            // Check if user already exists by mail
-            Query<User> queryByEmail = session.createQuery("from User where email = :email", User.class);
-            queryByEmail.setParameter("email", user.getEmail());
-            User existingUserByEmail = queryByEmail.uniqueResult();
-            if (existingUserByEmail != null) {
-                return "This mail is already used.";
-            }
             return "User does not exist.";
         }
         catch (Exception e) {
@@ -118,6 +119,7 @@ public class UserController {
             // Ensure the user is managed by the session
             User managedUser = session.get(User.class, userId);
             if (managedUser != null) {
+                managedUser.setId(userId);
                 return managedUser;
             } else {
                 System.err.println("User not found: " + userId);

@@ -32,12 +32,17 @@ public class UserControllerTest {
      void testVerifyUserExistFalse() {
         user.setUsername("Jane Doe");
         user.setEmail("Jane Doe");
-        assertFalse(userController.checkUserExists(user.getUsername(), user.getEmail()));
+        assertEquals("User does not exist.", userController.checkUserExists(user.getUsername(), user.getEmail()));
     }
 
     @Test
-    void testVerifyUserExistTrue() {
-        assertTrue(userController.checkUserExists(user.getUsername(), user.getEmail()));
+    void testVerifyUsernameAlreadyTaken() {
+        assertEquals("This username is already taken.", userController.checkUserExists(user.getUsername(), "Jane Doe"));
+    }
+
+    @Test
+    void testVerifyMailAreadyUsed() {
+        assertEquals("This mail is already used.", userController.checkUserExists("Jane Doe", user.getEmail()));
     }
 
     @Test
@@ -67,7 +72,4 @@ public class UserControllerTest {
         assertTrue(userController.verifyUserCredentials(user.getUsername(), "a"));
         assertFalse(userController.verifyUserCredentials(user.getUsername(), "b"));
     }
-
-
-
 }
