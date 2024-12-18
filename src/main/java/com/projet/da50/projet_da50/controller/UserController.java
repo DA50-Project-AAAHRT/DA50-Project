@@ -28,10 +28,10 @@ public class UserController {
             Transaction transaction = session.beginTransaction();
 
             // Check if user already exists by mail
-            Query<User> queryByEmail = session.createQuery("from User where email = :mail", User.class);
-            queryByEmail.setParameter("mail", user.getEmail());
-            User existingUserByEmail = queryByEmail.uniqueResult();
-            if (existingUserByEmail != null) {
+            Query<User> queryByMail = session.createQuery("from User where mail = :mail", User.class);
+            queryByMail.setParameter("mail", user.getMail());
+            User existingUserByMail = queryByMail.uniqueResult();
+            if (existingUserByMail != null) {
                 return "This mail is already used.";
             }
 

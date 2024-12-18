@@ -19,8 +19,8 @@ public class User {
     private String password;
 
     //Must be unique
-    @Column(name = "email", unique= true, nullable = false)
-    private String email;
+    @Column(name = "mail", unique= true, nullable = false)
+    private String mail;
 
     //@Enumerated(EnumType.STRING)  // Added annotation for enum mapping to the database
     @Column(name = "role", nullable = false)
@@ -30,10 +30,10 @@ public class User {
     public User() {}
 
     // Constructeur avec paramètres
-    public User(String username, String password, String email) {
+    public User(String username, String password, String mail) {
         this.username = username;
         this.password = password;
-        this.email = email;
+        this.mail = mail;
         this.role = Role.Reader; // Default role
     }
 
@@ -62,12 +62,12 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getMail() {
+        return mail;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     public Role getRole() {

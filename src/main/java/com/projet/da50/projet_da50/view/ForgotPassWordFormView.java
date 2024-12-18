@@ -30,8 +30,8 @@ public class ForgotPassWordFormView extends UI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Label emailLabel = new Label("Mail:");
-        grid.add(emailLabel, 0, 0);
+        Label mailLabel = new Label("Mail:");
+        grid.add(mailLabel, 0, 0);
         TextField mailField = new TextField();
         grid.add(mailField, 1, 0);
 

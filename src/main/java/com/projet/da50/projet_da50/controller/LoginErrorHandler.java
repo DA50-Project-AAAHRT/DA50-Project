@@ -17,36 +17,36 @@ public class LoginErrorHandler {
         return "Valid credentials.";
     }
 
-    public String validateCreateAccountFields(String username, String password, String email) {
-        if (!isValidEmail(email)) {
+    public String validateCreateAccountFields(String username, String password, String mail) {
+        if (!isValidMail(mail)) {
             return "Mail format is invalid.";
         }
         if (!isValidPassword(password)) {
             return "Password must be at least 6 characters long.";
         }
-        if (userController.checkUserExists(username, email).equals("This username is already taken.")) {
+        if (userController.checkUserExists(username, mail).equals("This username is already taken.")) {
             return "This username is already taken.";
         }
-        if (userController.checkUserExists(username, email).equals("This email is already used.")) {
+        if (userController.checkUserExists(username, mail).equals("This mail is already used.")) {
             return "This mail is already used.";
         }
         return "Valid credentials.";
     }
 
-    public String validateForgotPasswordFields(String email) {
-        if (!isValidEmail(email)) {
-            return "Invalid email format.";
+    public String validateForgotPasswordFields(String mail) {
+        if (!isValidMail(mail)) {
+            return "Invalid mail format.";
         }
-        if (userController.checkUserExists("", email) != "This mail is already used.") {
-            return "No account is associated with this email.";
+        if (userController.checkUserExists("", mail) != "This mail is already used.") {
+            return "No account is associated with this mail.";
         }
         return "Valid credentials.";
     }
 
-    public static boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pattern = Pattern.compile(emailRegex);
-        return pattern.matcher(email).matches();
+    public static boolean isValidMail(String mail) {
+        String mailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        Pattern pattern = Pattern.compile(mailRegex);
+        return pattern.matcher(mail).matches();
     }
 
     private boolean isValidPassword(String password) {

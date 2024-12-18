@@ -21,8 +21,8 @@
 
 - Ameliorer le view en general
 
-- Manage the errors : function that take argument (email,pwd,..) explaining the error
-    verify the email is an email, verify the password with restriction (6 characters...) -- FAIT mais améliorer le view et ajouter des erreurs si nécessaire
+- Manage the errors : function that take argument (mail,pwd,..) explaining the error
+    verify the mail is an mail, verify the password with restriction (6 characters...) -- FAIT mais améliorer le view et ajouter des erreurs si nécessaire
 
 - Add a security about password tentative (5 tentative max per 10 minutes)
 
@@ -30,4 +30,4 @@
 
 - Delete user when connected by creating a button (check if wallet equal to 0)
 
-- Add profile modification when connected (email, password, name)
+- Add profile modification when connected (mail, password, name)

@@ -15,7 +15,7 @@ public class Main extends Application{
 
 //        User user = new User();
 //        user.setUsername("Jane Doe");
-//        user.setEmail("jane.doe@example.com");
+//        user.setMail("jane.doe@example.com");
 //        user.setPassword("password");
 //        user.setRole(Role.Admin);
 //
@@ -34,7 +34,7 @@ public class Main extends Application{
 //        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 //            session.createQuery("from User", User.class)
 //                    .getResultList()
-//                    .forEach(u -> System.out.println(u.getUsername() + " - " + u.getEmail() + " - " + u.getPassword() + " - " + u.getRole()));
+//                    .forEach(u -> System.out.println(u.getUsername() + " - " + u.getMail() + " - " + u.getPassword() + " - " + u.getRole()));
 //            System.out.println("second try " + user.toString());
 //        }
         launch(args);

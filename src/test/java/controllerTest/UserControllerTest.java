@@ -31,8 +31,8 @@ public class UserControllerTest {
     @Test
      void testVerifyUserExistFalse() {
         user.setUsername("Jane Doe");
-        user.setEmail("Jane Doe");
-        assertEquals("User does not exist.", userController.checkUserExists(user.getUsername(), user.getEmail()));
+        user.setMail("Jane Doe");
+        assertEquals("User does not exist.", userController.checkUserExists(user.getUsername(), user.getMail()));
     }
 
     @Test
@@ -42,14 +42,14 @@ public class UserControllerTest {
 
     @Test
     void testVerifyMailAreadyUsed() {
-        assertEquals("This mail is already used.", userController.checkUserExists("Jane Doe", user.getEmail()));
+        assertEquals("This mail is already used.", userController.checkUserExists("Jane Doe", user.getMail()));
     }
 
     @Test
     void testCreateUserTest(){
         User userTest = new User("a", "a", "a");
         assertEquals(user.getUsername(), userTest.getUsername());
-        assertEquals(user.getEmail(), userTest.getEmail());
+        assertEquals(user.getMail(), userTest.getMail());
         assertEquals("a", userTest.getPassword());
     }
 
@@ -57,7 +57,7 @@ public class UserControllerTest {
     void testGetUserById(){
         User userTest = userController.getUserById(user.getId());
         assertEquals(user.getUsername(), userTest.getUsername());
-        assertEquals(user.getEmail(), userTest.getEmail());
+        assertEquals(user.getMail(), userTest.getMail());
         assertEquals(user.getPassword(), userTest.getPassword());
     }
 

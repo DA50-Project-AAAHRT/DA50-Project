@@ -41,8 +41,8 @@ public class CreateAccountFormView extends UI {
         TextField userField = new TextField();
         grid.add(userField, 1, 0);
 
-        Label emailLabel = new Label("Mail:");
-        grid.add(emailLabel, 0, 1);
+        Label mailLabel = new Label("Mail:");
+        grid.add(mailLabel, 0, 1);
         TextField mailField = new TextField();
         grid.add(mailField, 1, 1);
 
