@@ -14,11 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Stop MySQL
-        run: docker stop mysql
-      - name: Delete MySQL
-        run: docker rm mysql
-
       # Start Docker container
       - name: Start MySQL
         run: docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=da50 -p 3306:3306 mysql:8.4.3
