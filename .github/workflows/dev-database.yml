@@ -2,30 +2,28 @@ name: CI
 
 on:
   push:
-    branches: [ Developpement, DEV_database ]
+    branches: [ DEV_database ]
   pull_request:
-    branches: [ Developpement, DEV_database ]
+    branches: [ DEV_database ]
 
 jobs:
-
-
   build:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4.3
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: da50
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
     steps:
       - uses: actions/checkout@v3
-
-      # Start Docker container
-      - name: Start MySQL
-        run: docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=da50 -p 3306:3306 mysql:8.0.33
-
-      - name: Wait for MySQL to be ready
-        run: |
-          for i in {1..30}; do
-            docker exec mysql mysqladmin ping -h localhost --silent && break
-            echo "Waiting for MySQL to initialize..."
-            sleep 2
-          done
-
 
       - name: Set up JDK 21
         uses: actions/setup-java@v3
@@ -36,14 +34,14 @@ jobs:
 
       # Execute the tests specifying connection informations to DB
       - name: Build with Maven
-        run: mvn -B install --file pom.xml -Ddb.url="jdbc:mysql://localhost:3306/da50" -Ddb.user="hibernate_user" -Ddb.password="root"
+        run: |
+          mvn -B install --file pom.xml \
+          -Dhibernate.connection.url="jdbc:mysql://mysql:3306/da50" \
+          -Dhibernate.connection.username="hibernate_user" \
+          -Dhibernate.connection.password="root"
 
       - name: Upload Surefire reports
         uses: actions/upload-artifact@v3
         with:
           name: surefire-reports
           path: target/surefire-reports
-
-      # Stop Docker container
-      - name: Stop MySQL
-        run: docker stop mysql
