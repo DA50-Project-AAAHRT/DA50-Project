@@ -19,13 +19,16 @@ public class LoginErrorHandler {
 
     public String validateCreateAccountFields(String username, String password, String email) {
         if (!isValidEmail(email)) {
-            return "Invalid email format.";
+            return "Mail format is invalid.";
         }
         if (!isValidPassword(password)) {
             return "Password must be at least 6 characters long.";
         }
-        if (userController.checkUserExists(username, email)) {
-            return "User already exists.";
+        if (userController.checkUserExists(username, email).equals("This username is already taken.")) {
+            return "This username is already taken.";
+        }
+        if (userController.checkUserExists(username, email).equals("This email is already used.")) {
+            return "This mail is already used.";
         }
         return "Valid credentials.";
     }
@@ -33,6 +36,9 @@ public class LoginErrorHandler {
     public String validateForgotPasswordFields(String email) {
         if (!isValidEmail(email)) {
             return "Invalid email format.";
+        }
+        if (userController.checkUserExists("", email) != "This mail is already used.") {
+            return "No account is associated with this email.";
         }
         return "Valid credentials.";
     }

@@ -20,8 +20,8 @@ public class UserController {
     }
 
     // Verify if a user exists
-    public boolean checkUserExists(String username, String email) {
-        User user = new User(username, "", email);
+    public String checkUserExists(String username, String mail) {
+        User user = new User(username, "", mail);
 
         // Check if the user already exists
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -32,29 +32,28 @@ public class UserController {
             queryByUsername.setParameter("username", user.getUsername());
             User existingUserByUsername = queryByUsername.uniqueResult();
             if (existingUserByUsername != null) {
-                return true;
+                return "This username is already taken.";
             }
 
-            // Check if user already exists by email
+            // Check if user already exists by mail
             Query<User> queryByEmail = session.createQuery("from User where email = :email", User.class);
             queryByEmail.setParameter("email", user.getEmail());
             User existingUserByEmail = queryByEmail.uniqueResult();
             if (existingUserByEmail != null) {
-                return true;
+                return "This mail is already used.";
             }
-
-            return false;
+            return "User does not exist.";
         }
         catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return "An error occurred.";
         }
     }
 
     // Create a new user
-    public Long createUser(String username, String password, String email) {
+    public Long createUser(String username, String password, String mail) {
         String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        User user = new User(username, hashedPassword, email);
+        User user = new User(username, hashedPassword, mail);
 
         // Save the user to the database
         try(Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -71,8 +70,6 @@ public class UserController {
         }
         return null;
     }
-
-
 
     // Check if a user exists with the right password
     public boolean verifyUserCredentials(String username, String password) {

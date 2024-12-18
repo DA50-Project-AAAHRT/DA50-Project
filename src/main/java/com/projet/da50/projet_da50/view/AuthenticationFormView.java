@@ -27,7 +27,7 @@ public class AuthenticationFormView extends UI{
 
     public void show() {
 
-        primaryStage.setTitle("Authentification");
+        primaryStage.setTitle("Authentication");
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -36,21 +36,21 @@ public class AuthenticationFormView extends UI{
         grid.setPadding(new Insets(25, 25, 25, 25));
 
         // Add the label and username field
-        Label userLabel = new Label("Nom d'utilisateur:");
+        Label userLabel = new Label("Username:");
         grid.add(userLabel, 0, 0);
 
         TextField userField = new TextField();
         grid.add(userField, 1, 0);
 
         // Add the label and password field
-        Label pwLabel = new Label("Mot de passe:");
+        Label pwLabel = new Label("Password");
         grid.add(pwLabel, 0, 1);
 
         PasswordField pwField = new PasswordField();
         grid.add(pwField, 1, 1);
 
-        // Connexion button
-        Button btnLogin = new Button("Connexion");
+        // Connection button
+        Button btnLogin = new Button("Login");
         HBox hbBtnLogin = new HBox(10);
         hbBtnLogin.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtnLogin.getChildren().add(btnLogin);
@@ -70,15 +70,15 @@ public class AuthenticationFormView extends UI{
             }
         });
 
-        // Button "Mot de passe oublié"
-        Button btnForgotPassword = new Button("Mot de passe oublié");
+        // Button "Forgotten password?"
+        Button btnForgotPassword = new Button("Forgotten password?");
         btnForgotPassword.setOnAction(e -> {
             ForgotPassWordFormView forgotPasswordPage = new ForgotPassWordFormView(primaryStage);
             forgotPasswordPage.show();
         });
 
-        // Button "Créer un compte"
-        Button btnCreateAccount = new Button("Créer un compte");
+        // Button "Create Account"
+        Button btnCreateAccount = new Button("Create Account");
         btnCreateAccount.setOnAction(e -> {
             CreateAccountFormView createAccountPage = new CreateAccountFormView(primaryStage);
             createAccountPage.show();
@@ -91,7 +91,6 @@ public class AuthenticationFormView extends UI{
 
         // Create the scene and add the grid pane
         Scene scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
-        primaryStage.setTitle("Page d'authentification");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

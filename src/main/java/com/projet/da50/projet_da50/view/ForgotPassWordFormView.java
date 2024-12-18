@@ -22,8 +22,7 @@ public class ForgotPassWordFormView extends UI {
     }
 
     public void show() {
-        primaryStage.setTitle("Forgot Password");
-
+        primaryStage.setTitle("Reset Password");
 
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
@@ -31,26 +30,40 @@ public class ForgotPassWordFormView extends UI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Label emailLabel = new Label("Email:");
+        Label emailLabel = new Label("Mail:");
         grid.add(emailLabel, 0, 0);
-        TextField emailField = new TextField();
-        grid.add(emailField, 1, 0);
+        TextField mailField = new TextField();
+        grid.add(mailField, 1, 0);
 
-        Button btnResetPassword = new Button("Réinitialiser le mot de passe");
+        Button btnResetPassword = new Button("Reset Password");
         btnResetPassword.setOnAction(e -> {
-            String email = emailField.getText();
-            String validationMessage = loginErrorHandler.validateForgotPasswordFields(email);
+            String mail = mailField.getText();
+            String validationMessage = loginErrorHandler.validateForgotPasswordFields(mail);
+
             if ("Valid credentials.".equals(validationMessage)) {
-                System.out.println("Lien de réinitialisation envoyé à " + email);
+                Label successLabel = new Label("A reset link has been sent to " + mail);
+                Stage successStage = new Stage();
+                GridPane successGrid = new GridPane();
+                successGrid.setAlignment(Pos.CENTER);
+                successGrid.setPadding(new Insets(10));
+                successGrid.add(successLabel, 0, 0);
+
+                Button closeButton = new Button("Close");
+                closeButton.setOnAction(event -> successStage.close());
+                successGrid.add(closeButton, 0, 1);
+
+                Scene successScene = new Scene(successGrid, 300, 100);
+                successStage.setScene(successScene);
+                successStage.showAndWait();
                 new AuthenticationFormView(primaryStage).show();
             } else {
                 Label errorLabel = new Label(validationMessage);
                 grid.add(errorLabel, 1, 3);
-                emailField.clear();
+                mailField.clear();
             }
         });
 
-        Button btnBack = new Button("Retour");
+        Button btnBack = new Button("Go back");
         btnBack.setOnAction(e -> new AuthenticationFormView(primaryStage).show());
 
         HBox hbButtons = new HBox(10);
@@ -59,7 +72,6 @@ public class ForgotPassWordFormView extends UI {
         grid.add(hbButtons, 1, 1);
 
         Scene scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
-        primaryStage.setTitle("Mot de passe oublié");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

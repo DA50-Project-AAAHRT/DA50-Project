@@ -36,42 +36,58 @@ public class CreateAccountFormView extends UI {
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
 
-        Label userLabel = new Label("Nom d'utilisateur:");
+        Label userLabel = new Label("Username:");
         grid.add(userLabel, 0, 0);
         TextField userField = new TextField();
         grid.add(userField, 1, 0);
 
-        Label emailLabel = new Label("Email:");
+        Label emailLabel = new Label("Mail:");
         grid.add(emailLabel, 0, 1);
-        TextField emailField = new TextField();
-        grid.add(emailField, 1, 1);
+        TextField mailField = new TextField();
+        grid.add(mailField, 1, 1);
 
-        Label pwLabel = new Label("Mot de passe:");
+        Label pwLabel = new Label("Password:");
         grid.add(pwLabel, 0, 2);
         PasswordField pwField = new PasswordField();
         grid.add(pwField, 1, 2);
 
-        Button btnCreateAccount = new Button("Créer un compte");
+        Button btnCreateAccount = new Button("Create Account");
 
         btnCreateAccount.setOnAction(e -> {
             String username = userField.getText();
             String password = pwField.getText();
-            String email = emailField.getText();
+            String mail = mailField.getText();
 
-            String validationMessage = loginErrorHandler.validateCreateAccountFields(username, password, email);
+            String validationMessage = loginErrorHandler.validateCreateAccountFields(username, password, mail);
             if ("Valid credentials.".equals(validationMessage)) {
-                userController.createUser(username, password, email);
+                userController.createUser(username, password, mail);
                 new AuthenticationFormView(primaryStage).show();
-            } else {
+            } else if ("Password should be at least 6 characters long.".equals(validationMessage)) {
+                // Handle specific case for password length
                 Label errorLabel = new Label(validationMessage);
                 grid.add(errorLabel, 1, 3);
-                userField.clear();
-                emailField.clear();
                 pwField.clear();
+                pwField.requestFocus();
+            } else if ("Mail format is invalid.".equals(validationMessage)) {
+                // Handle specific case for mail format
+                Label errorLabel = new Label(validationMessage);
+                grid.add(errorLabel, 1, 3);
+                mailField.clear();
+                mailField.requestFocus();
+            } else if ("This username is already taken.".equals(validationMessage)) {
+                // Handle specific case for username taken
+                Label errorLabel = new Label(validationMessage);
+                grid.add(errorLabel, 1, 3);
+                userField.requestFocus();
+            } else if ("This mail is already used.".equals(validationMessage)) {
+                // Handle specific case for mail taken
+                Label errorLabel = new Label(validationMessage);
+                grid.add(errorLabel, 1, 3);
+                mailField.requestFocus();
             }
         });
 
-        Button btnBack = new Button("Login");
+        Button btnBack = new Button("Go back");
         btnBack.setOnAction(e -> new AuthenticationFormView(primaryStage).show());
 
         HBox hbButtons = new HBox(10);
@@ -80,7 +96,7 @@ public class CreateAccountFormView extends UI {
         grid.add(hbButtons, 1, 4);
 
         Scene scene = new Scene(grid, WINDOW_WIDTH, WINDOW_HEIGHT);
-        primaryStage.setTitle("Créer un compte");
+        primaryStage.setTitle("Create Account");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
