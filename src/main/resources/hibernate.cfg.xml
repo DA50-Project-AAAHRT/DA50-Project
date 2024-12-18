@@ -4,22 +4,19 @@
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-         <!-- Connexion à la base MySQL -->
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/da50</property>
         <property name="hibernate.connection.username">hibernate_user</property>
         <property name="hibernate.connection.password">root</property>
 
-        <!-- Dialecte pour MySQL -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
 
-        <!-- Hibernate Configuration -->
         <property name="hibernate.hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
 
+        <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
 
-        <!-- Mapping des classes -->
         <mapping class="com.projet.da50.projet_da50.model.User"/>
     </session-factory>
 </hibernate-configuration>
