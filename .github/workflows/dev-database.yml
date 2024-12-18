@@ -7,10 +7,17 @@ on:
     branches: [ Developpement, DEV_database ]
 
 jobs:
+
+
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      - name: Stop MySQL
+        run: docker stop mysql
+      - name: Delete MySQL
+        run: docker rm mysql
 
       # Start Docker container
       - name: Start MySQL
