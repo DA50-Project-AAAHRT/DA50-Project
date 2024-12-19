@@ -124,6 +124,30 @@ public class UserController {
         }
     }
 
+    /**
+     * Updates a user's information in the database.
+     *
+     * @param user The user object with updated information.
+     * @return True if the user was updated successfully, false otherwise.
+     */
+    public boolean updateUser(User user) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.update(user);
+            transaction.commit();
+            System.out.println("User updated successfully: " + user.getId());
+            return true;
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+            System.err.println("Failed to update user: " + user.getId());
+            return false;
+        }
+    }
+
     // Close the SessionFactory when the application is closed
     public void close() {
         if (factory != null && !factory.isClosed()) {

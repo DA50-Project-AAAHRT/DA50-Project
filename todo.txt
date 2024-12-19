@@ -2,7 +2,7 @@
 
 - User connexion --> Emmene vers une page ou sera deco -- FAIT
 
-- Admin comment faire pour le role
+- Admin comment faire pour le role -- FAIT via le script install.bat
     No token for the admin (in security purpose)
 
 - Admin will have different view
