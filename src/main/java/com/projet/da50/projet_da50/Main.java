@@ -1,43 +1,33 @@
 package com.projet.da50.projet_da50;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.application.Application;
 import com.projet.da50.projet_da50.view.AuthenticationFormView;
 
 public class Main extends Application{
+
     @Override
     public void start(Stage primaryStage) {
         AuthenticationFormView authPage = new AuthenticationFormView(primaryStage);
         authPage.show();
+
+        // Définir l'icône de l'application
+        Image icon = new Image(getClass().getResource("/icon.png").toExternalForm());
+        primaryStage.getIcons().add(icon);
+
+        // Listen to the close event of the authentication window
+        primaryStage.setOnCloseRequest(event -> {
+            if (!primaryStage.isMaximized()) {
+                // if the authentication window is closed without being in full screen,
+                // this means that the user is not connected, so we close the application
+                HibernateUtil.shutdown();
+                System.exit(0);
+            }
+        });
     }
 
     public static void main(String[] args) {
-
-//        User user = new User();
-//        user.setUsername("Jane Doe");
-//        user.setMail("jane.doe@example.com");
-//        user.setPassword("password");
-//        user.setRole(Role.Admin);
-//
-//        // Sauvegarder l'utilisateur dans la base de données
-//        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            Transaction transaction = session.beginTransaction();
-//            session.save(user);
-//            transaction.commit();
-//            System.out.println("first try" +user.toString());
-//        }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        //Lire les utilisateurs depuis la base de données
-//        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-//            session.createQuery("from User", User.class)
-//                    .getResultList()
-//                    .forEach(u -> System.out.println(u.getUsername() + " - " + u.getMail() + " - " + u.getPassword() + " - " + u.getRole()));
-//            System.out.println("second try " + user.toString());
-//        }
         launch(args);
-        HibernateUtil.shutdown();
     }
 }

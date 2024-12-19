@@ -1,55 +1,60 @@
 package com.projet.da50.projet_da50.controller;
 
-import java.util.regex.Pattern;
+import com.projet.da50.projet_da50.model.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class LoginErrorHandler {
 
     private UserController userController;
 
-    public LoginErrorHandler() {
+    public LoginErrorHandler(){
         this.userController = new UserController();
     }
 
     public String validateAuthenticationFields(String username, String password) {
-        if(!userController.verifyUserCredentials(username, password)){
-            return "Wrong credentials.";
+        if (username.isEmpty() || password.isEmpty()) {
+            return "Please fill in all fields.";
         }
-        return "Valid credentials.";
+
+        User user = userController.findUserByUsername(username);
+
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            return "Valid credentials.";
+        } else {
+            return "Invalid username or password.";
+        }
     }
 
     public String validateCreateAccountFields(String username, String password, String mail) {
-        if (!isValidMail(mail)) {
+        if (username.isEmpty() || password.isEmpty() || mail.isEmpty()) {
+            return "Please fill in all fields.";
+        }
+        if (password.length() < 6) {
+            return "Password should be at least 6 characters long.";
+        }
+        if (!mail.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
             return "Mail format is invalid.";
         }
-        if (!isValidPassword(password)) {
-            return "Password must be at least 6 characters long.";
-        }
-        if (userController.checkUserExists(username, mail).equals("This username is already taken.")) {
+        if (userController.findUserByUsername(username)!=null) {
             return "This username is already taken.";
         }
-        if (userController.checkUserExists(username, mail).equals("This mail is already used.")) {
+        if (userController.findUserByMail(mail)!=null) {
             return "This mail is already used.";
         }
         return "Valid credentials.";
     }
 
     public String validateForgotPasswordFields(String mail) {
-        if (!isValidMail(mail)) {
-            return "Invalid mail format.";
+        if (mail.isEmpty()) {
+            return "Please fill in all fields.";
         }
-        if (userController.checkUserExists("", mail) != "This mail is already used.") {
-            return "No account is associated with this mail.";
+        if (!mail.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")) {
+            return "Mail format is invalid.";
         }
+        if (userController.findUserByMail(mail) == null) {
+            return "This mail does not exist";
+        }
+        //If everything is ok:
         return "Valid credentials.";
-    }
-
-    public static boolean isValidMail(String mail) {
-        String mailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        Pattern pattern = Pattern.compile(mailRegex);
-        return pattern.matcher(mail).matches();
-    }
-
-    private boolean isValidPassword(String password) {
-        return password != null && password.length() >= 6;
     }
 }

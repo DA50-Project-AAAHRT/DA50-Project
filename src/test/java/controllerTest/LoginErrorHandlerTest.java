@@ -17,38 +17,74 @@ public class LoginErrorHandlerTest {
 
     @BeforeEach
     void setUp() {
-        user = new User();
         userController = new UserController();
         loginErrorHandler = new LoginErrorHandler();
-        user.setId(userController.createUser("testUser", "testPassword", "test@test.com"));
-        user = userController.getUserById(user.getId());
+        // Crée un utilisateur avec des données de test uniques
+        Long userId = userController.createUser("testUser", "testPassword", "test@example.com");
+        assertNotNull(userId, "User creation should return a non-null ID");
+        user = userController.getUserById(userId);
     }
 
-    // Delete this user
     @AfterEach
-    void after(){
-        userController.deleteUserById(user.getId());
+    void tearDown() {
+        // Supprime l'utilisateur après chaque test
+        if (user != null && user.getId() != null) {
+            userController.deleteUserById(user.getId());
+        }
     }
 
     @Test
-    void testValidateAuthenticationFields() {
+    void testValidateAuthenticationFields_ValidCredentials() {
         assertEquals("Valid credentials.", loginErrorHandler.validateAuthenticationFields(user.getUsername(), "testPassword"));
-        assertEquals("Wrong credentials.", loginErrorHandler.validateAuthenticationFields(user.getUsername(), "wrongPassword"));
     }
 
     @Test
-    void testValidateCreateAccountFields() {
-        assertEquals("This username is already taken.", loginErrorHandler.validateCreateAccountFields(user.getUsername(), "newPassword", "new@example.com"));
-        assertEquals("This mail is already used.", loginErrorHandler.validateCreateAccountFields("newUser", "newPassword", user.getMail()));
+    void testValidateAuthenticationFields_InvalidPassword() {
+        assertEquals("Invalid username or password.", loginErrorHandler.validateAuthenticationFields(user.getUsername(), "wrongPassword"));
+    }
+
+    @Test
+    void testValidateAuthenticationFields_UserDoesNotExist() {
+        assertEquals("Invalid username or password.", loginErrorHandler.validateAuthenticationFields("nonExistentUser", "anyPassword"));
+    }
+
+    @Test
+    void testValidateCreateAccountFields_ValidCredentials() {
+        assertEquals("Valid credentials.", loginErrorHandler.validateCreateAccountFields("newUser", "newPassword", "newuser@example.com"));
+    }
+
+    @Test
+    void testValidateCreateAccountFields_UsernameAlreadyTaken() {
+        assertEquals("This username is already taken.", loginErrorHandler.validateCreateAccountFields(user.getUsername(), "anyPassword", "unique@example.com"));
+    }
+
+    @Test
+    void testValidateCreateAccountFields_MailAlreadyUsed() {
+        assertEquals("This mail is already used.", loginErrorHandler.validateCreateAccountFields("uniqueUser", "anyPassword", user.getMail()));
+    }
+
+    @Test
+    void testValidateCreateAccountFields_InvalidMailFormat() {
         assertEquals("Mail format is invalid.", loginErrorHandler.validateCreateAccountFields("newUser", "newPassword", "invalidMail"));
-        assertEquals("Password must be at least 6 characters long.", loginErrorHandler.validateCreateAccountFields("newUser", "short", "new@example.com"));
-        assertEquals("Valid credentials.", loginErrorHandler.validateCreateAccountFields("newUser", "newPassword", "new@example.com"));
     }
 
     @Test
-    void testValidateForgotPasswordFields() {
+    void testValidateCreateAccountFields_ShortPassword() {
+        assertEquals("Password should be at least 6 characters long.", loginErrorHandler.validateCreateAccountFields("newUser", "short", "newuser@example.com"));
+    }
+
+    @Test
+    void testValidateForgotPasswordFields_ValidMail() {
         assertEquals("Valid credentials.", loginErrorHandler.validateForgotPasswordFields(user.getMail()));
-        assertEquals("Invalid mail format.", loginErrorHandler.validateForgotPasswordFields("invalidMail"));
-        assertEquals("No account is associated with this mail.", loginErrorHandler.validateForgotPasswordFields("noaccount@example.com"));
+    }
+
+    @Test
+    void testValidateForgotPasswordFields_InvalidMailFormat() {
+        assertEquals("Mail format is invalid.", loginErrorHandler.validateForgotPasswordFields("invalidMail"));
+    }
+
+    @Test
+    void testValidateForgotPasswordFields_MailDoesNotExist() {
+        assertEquals("This mail does not exist", loginErrorHandler.validateForgotPasswordFields("nonexistent@example.com"));
     }
 }

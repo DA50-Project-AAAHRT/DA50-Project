@@ -19,70 +19,67 @@ public class UserController {
         factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
     }
 
-    // Verify if a user exists
-    public String checkUserExists(String username, String mail) {
-        User user = new User(username, "", mail);
-
-        // Check if the user already exists
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            // Check if user already exists by mail
-            Query<User> queryByMail = session.createQuery("from User where mail = :mail", User.class);
-            queryByMail.setParameter("mail", user.getMail());
-            User existingUserByMail = queryByMail.uniqueResult();
-            if (existingUserByMail != null) {
-                return "This mail is already used.";
-            }
-
-            // Check if user already exists by username
-            Query<User> queryByUsername = session.createQuery("from User where username = :username", User.class);
-            queryByUsername.setParameter("username", user.getUsername());
-            User existingUserByUsername = queryByUsername.uniqueResult();
-            if (existingUserByUsername != null) {
-                return "This username is already taken.";
-            }
-
-            return "User does not exist.";
-        }
-        catch (Exception e) {
+    // Find a user by username
+    public User findUserByUsername(String username) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<User> query = session.createQuery("from User where username = :username", User.class);
+            query.setParameter("username", username);
+            return query.uniqueResult();
+        } catch (Exception e) {
             e.printStackTrace();
-            return "An error occurred.";
+            return null;
+        }
+    }
+
+    // Find a user by mail
+    public User findUserByMail(String mail) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<User> query = session.createQuery("from User where mail = :mail", User.class);
+            query.setParameter("mail", mail);
+            return query.uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     // Create a new user
     public Long createUser(String username, String password, String mail) {
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        User user = new User(username, hashedPassword, mail);
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-        // Save the user to the database
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
+            if (findUserByUsername(username) != null) {
+                System.err.println("Username already exists: " + username);
+                return null;
+            }
+            if (findUserByMail(mail) != null) {
+                System.err.println("Mail already exists: " + mail);
+                return null;
+            }
+
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+            User user = new User(username, hashedPassword, mail);
 
             Long id = (Long) session.save(user);
-            System.out.println("User created with ID: " + id);
-            user.setId(id);
             transaction.commit();
+            System.out.println("User created with ID: " + id);
             return id;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
-    // Check if a user exists with the right password
+    // Verify if a user exists with the right password
     public boolean verifyUserCredentials(String username, String password) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            session.beginTransaction();
-            String hql = "FROM User WHERE username = :username";
-            Query<User> query = session.createQuery(hql);
-            query.setParameter("username", username);
-            User result = query.uniqueResult();
-            session.getTransaction().commit();
-            if (result != null && BCrypt.checkpw(password, result.getPassword())) {
-                return true;  // If the user exists and the password is correct
+            User user = findUserByUsername(username);
+            if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+                return true;
             }
             return false;
         } catch (Exception e) {
@@ -92,51 +89,45 @@ public class UserController {
     }
 
     // Delete a user
-    public void deleteUserById(Long userId){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            // Ensure the user is managed by the session
-            User managedUser = session.get(User.class, userId);
-            if (managedUser != null) {
-                session.delete(managedUser);
+    public boolean deleteUserById(Long userId) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            User user = session.get(User.class, userId);
+            if (user != null) {
+                session.delete(user);
                 transaction.commit();
                 System.out.println("User deleted successfully: " + userId);
+                return true;
             } else {
                 System.err.println("User not found: " + userId);
+                return false;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             e.printStackTrace();
             System.err.println("Failed to delete user: " + userId);
+            return false;
         }
     }
 
-    public User getUserById(Long userId){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Transaction transaction = session.beginTransaction();
-
-            // Ensure the user is managed by the session
-            User managedUser = session.get(User.class, userId);
-            if (managedUser != null) {
-                managedUser.setId(userId);
-                return managedUser;
-            } else {
-                System.err.println("User not found: " + userId);
-                return null;
-            }
-        }
-        catch (Exception e) {
+    // Get a user by ID
+    public User getUserById(Long userId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(User.class, userId);
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to get user: " + userId);
             return null;
         }
     }
 
-
-
     // Close the SessionFactory when the application is closed
     public void close() {
-        factory.close();
+        if (factory != null && !factory.isClosed()) {
+            factory.close();
+        }
     }
 }
