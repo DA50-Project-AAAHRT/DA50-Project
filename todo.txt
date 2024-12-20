@@ -2,6 +2,7 @@ TODO :
 - Token quand connexion (1 jours)
     + : No token for the admin (in security purpose)
     + : Déconnexion --> supp le token
+    ? : how to know who is logged in
 
 - Gerer les logs (log4j)
 
